@@ -17,7 +17,7 @@ const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(user)
+  // console.log(user)
 
   // signup/create user
   const createUser = (email, password) => {
@@ -66,6 +66,26 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      console.log('current User', currentUser)
+      // jwt
+      if(currentUser){
+        const loggedUser = {email: currentUser.email}
+        fetch('http://localhost:3000/getJwtToken', {
+          method: 'POST',
+          headers: {
+            'content-type':'application/json'
+          },
+          body: JSON.stringify(loggedUser)
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('token', data)
+          localStorage.setItem('token', data.token)
+        })
+      }
+      else{
+        localStorage.removeItem('token')
+      }
       setLoading(false);
     });
     return () => unsubscribe();
