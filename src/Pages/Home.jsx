@@ -9,6 +9,7 @@ const Home = () => {
         <div>
             <Banner></Banner>
             <LatestProduct latestProductPromise={latestProductPromise}></LatestProduct>
+            
         </div>
     );
 };

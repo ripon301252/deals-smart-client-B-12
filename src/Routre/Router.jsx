@@ -53,7 +53,9 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/createProduct',
-                element: <CreateProduct></CreateProduct>
+                element: <PrivateRoute>
+                    <CreateProduct></CreateProduct>
+                </PrivateRoute>
             },
             {
                 path: '/signin',

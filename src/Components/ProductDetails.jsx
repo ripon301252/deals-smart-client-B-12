@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLoaderData } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const ProductDetails = () => {
   const [bids, setBids] = useState([]);
@@ -12,17 +13,30 @@ const ProductDetails = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${productId}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`
+    axios.get(`http://localhost:3000/products/bids/${productId}`, {
+       headers: {
+         authorization: `Bearer ${user.accessToken}`
       }
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("bids for this product", data);
-        setBids(data);
-      });
+    .then(data =>{
+      console.log('after axios get', data)
+      setBids(data.data)
+    })
   }, [productId, user]);
+
+
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/products/bids/${productId}`, {
+  //     headers: {
+  //       authorization: `Bearer ${user.accessToken}`
+  //     }
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log("bids for this product", data);
+  //       setBids(data);
+  //     });
+  // }, [productId, user]);
 
   const handleBidModalOpen = () => {
     bidModalRef.current.showModal();
@@ -172,7 +186,7 @@ const ProductDetails = () => {
             <tbody>
               {/* row 1 */}
               {
-                bids.map((bid, index) =>  <tr>
+                bids.map((bid, index) =>  <tr key={bid._id}>
                 <th>
                     {index + 1}
                 </th>
