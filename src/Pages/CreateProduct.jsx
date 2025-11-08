@@ -1,10 +1,15 @@
-import axios from "axios";
+// import axios from "axios";
 import React from "react";
 import Swal from "sweetalert2";
 import useAuth from "../Hooks/UseAuth";
+// import useAxios from "../Hooks/useAxios";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const CreateProduct = () => {
-  const {user} = useAuth()
+  const { user } = useAuth();
+  // const axiosInstance = useAxios();
+  const axiosInstanceSecure = useAxiosSecure()
+
   const handleCreateAProduct = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -13,23 +18,50 @@ const CreateProduct = () => {
     const price_min = form.price_min.value;
     const price_max = form.price_max.value;
     console.log(title, image, price_min, price_max);
-    const newProduct = { title, image, price_min, price_max,
+    const newProduct = {
+      title,
+      image,
+      price_min,
+      price_max,
       email: user.email,
-      seller_name: user.displayName
-     };
-    axios.post("http://localhost:3000/products", newProduct).then((data) => {
-      console.log(data);
-      if (data.data.insertedId) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Your product has been created",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    });
+      seller_name: user.displayName,
+    };
+
+    // axios.post("http://localhost:3000/products", newProduct).then((data) => {
+    //   console.log(data);
+    //   if (data.data.insertedId) {
+    //     Swal.fire({
+    //       position: "center",
+    //       icon: "success",
+    //       title: "Your product has been created",
+    //       showConfirmButton: false,
+    //       timer: 1500,
+    //     });
+    //   }
+    // });
+
+    // axiosInstance.post('/products', newProduct )
+    // .then(data => {
+    //   console.log(data.data)
+    //    Swal.fire({
+    //       position: "center",
+    //       icon: "success",
+    //       title: "Your product has been created",
+    //       showConfirmButton: false,
+    //       timer: 1500,
+    //     });
+    // })
+
+    axiosInstanceSecure.post('/products', newProduct )
+    .then(data =>{
+      console.log('after secure call', data.data)
+    })
+
+
+
+
   };
+
 
   return (
     <div>
